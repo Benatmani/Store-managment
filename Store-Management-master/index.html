@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Store Management CRUD App</title>
+  </head>
+  <body>
+    <header>
+      <h1>Store Management</h1>
+    </header>
+    <main>
+      <div class="container">
+        <input
+          type="text"
+          name="product-name"
+          id="product-name"
+          placeholder="product's name *"
+        />
+        <div class="product-price-controllers">
+          <input
+            type="number"
+            name="product-price"
+            id="product-price"
+            placeholder="product's price *"
+          />
+          <input
+            type="number"
+            name="product-taxes"
+            id="product-taxes"
+            placeholder="product's taxes *"
+          />
+          <input
+          type="number"
+          name="product-adg"
+          id="product-adg"
+          placeholder="product's adg *"
+          />
+          <input
+          type="number"
+          name="product-discount"
+          id="product-discount"
+          placeholder="product's discount (optional)"
+          />
+          
+          <div class="total">
+            <span>total : </span>
+            <span class="result"></span>
+          </div>
+        </div>
+        <div class="product-specifications">
+          <input
+            type="number"
+            name="product-count"
+            id="product-count"
+            placeholder="product's count *"
+          />
+          <select name="product-category" id="product-category">
+            <option value="phones">phones</option>
+            <option value="goe">goe</option>
+            <option value="ddff">ddff</option>
+          </select>
+          <button>add category</button>
+        </div>
+        <button id="create-product">Create</button>
+        <hr />
+        <h2>Search</h2>
+        <div class="search-options">
+          <input
+            type="text"
+            name="search-field"
+            id="search-field"
+            placeholder="search"
+          />
+          <select name="search-combo-box" id="search-combo-box">
+            <option value="">phones</option>
+          </select>
+        </div>
+        <div class="delete">
+          <button id="delete-product">delete all</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Title</td>
+              <td>Price</td>
+              <td>Taxes</td>
+              <td>Ads</td>
+              <td>Discount</td>
+              <td>Total</td>
+              <td>Category</td>
+              <td>Update</td>
+              <td>Delete</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ID</td>
+              <td>Title</td>
+              <td>Price</td>
+              <td>Taxes</td>
+              <td>Ads</td>
+              <td>Discount</td>
+              <td>Total</td>
+              <td>Category</td>
+              <td>Update</td>
+              <td>Delete</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
