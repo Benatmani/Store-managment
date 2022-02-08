@@ -62,7 +62,7 @@
             <option value="goe">goe</option>
             <option value="ddff">ddff</option>
           </select>
-          <button>add category</button>
+          <button id="add-category">add category</button>
         </div>
         <button id="create-product">Create</button>
         <hr />
@@ -97,22 +97,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>ID</td>
-              <td>Title</td>
-              <td>Price</td>
-              <td>Taxes</td>
-              <td>Ads</td>
-              <td>Discount</td>
-              <td>Total</td>
-              <td>Category</td>
-              <td>Update</td>
-              <td>Delete</td>
-            </tr>
           </tbody>
         </table>
       </div>
     </main>
+    <div class="popup-container">
+      <div class="popup">
+        <div class="close"></div>
+        <input type="text" name="popup-category" id="popup-category">
+        <button>add category</button>
+      </div>
+    </div>
     <script src="main.js"></script>
   </body>
 </html>
