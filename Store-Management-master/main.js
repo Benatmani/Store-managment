@@ -4,51 +4,18 @@ let products = JSON.parse(localStorage.getItem("products"))
 let categories = JSON.parse(localStorage.getItem("categories"))
   ? JSON.parse(localStorage.getItem("categories"))
   : [];
-
+  updateCategorys();
+  updateProducts();
 document.querySelector("#create-product").addEventListener("click", () => {
-  let count = document.querySelector("#product-count").value;
-  let product = {
-    id: products.length,
-    name: document.querySelector("#product-name").value,
-    price: document.querySelector("#product-price").value,
-    taxes: document.querySelector("#product-taxes").value,
-    ads: document.querySelector("#product-adg").value,
-    discount: document.querySelector("#product-discount").value,
-    total: document.querySelector(".result").innerHTML,
-    category: document.querySelector("#product-category").value,
-  };
-  testFields(product);
-  // let tbody = document.querySelector("tbody");
-
-  // for (let i = 0; i < count; i++) {
-  //   product.id = products.length;
-  //   tbody.append(
-  //     productTableRow(
-  //       product.id,
-  //       product.name,
-  //       product.price,
-  //       product.taxes,
-  //       product.ads,
-  //       product.discount,
-  //       product.total,
-  //       product.category
-  //     )
-  //   );
-  //   products.push(product);
-  // }
+  testFields();
 });
-function productTableRow(
-  id,
-  name,
-  price,
-  taxes,
-  ads,
-  discount,
-  total,
-  category
-) {
+function productTableRow(product) {
   let row = document.createElement("tr");
-  row.innerHTML = `<td>${id}</td>
+  Object.values(product).forEach(e => {
+    row.innerHTML+=`<td>${e}</td>`;
+  })
+  row.innerHTML+='<td><button class="update">Update</button></td> <td><button class="delete" >Delete</button></td>'
+  /*row.innerHTML = `<td>${id}</td>
               <td>${name}</td>
               <td>${price}</td>
               <td>${taxes}</td>
@@ -57,13 +24,14 @@ function productTableRow(
               <td>${total}</td>
               <td>${category}</td>
               <td><button class="update">Update</button></td>
-              <td><button class="delete" >Delete</button></td>`;
+              <td><button class="delete" >Delete</button></td>`;*/
   return row;
 }
 
-function testFields(product) {
+function testFields() {
   let fields = [
     document.querySelector("#product-name"),
+    document.querySelector("#product-category"),
     ...Array.from(
       document.querySelectorAll(
         ".product-price-controllers input:not(:last-of-type)"
@@ -72,7 +40,7 @@ function testFields(product) {
     document.querySelector("#product-count"),
   ];
   let isEmpty = fields.some((ele) => ele.value === "");
-  let isNegative = fields.slice(1).some((ele) => ele.value <0 );
+  let isNegative = fields.slice(2).some((ele) => ele.value <0 );
   if (isEmpty) {
     alert("fill those fields");
     fields.forEach((ele) => {
@@ -93,21 +61,20 @@ function testFields(product) {
     let tbody = document.querySelector("tbody");
     let count = document.querySelector("#product-count").value;
     for (let i = 0; i < count; i++) {
-      product.id = products.length;
-      tbody.append(
-        productTableRow(
-          product.id,
-          product.name,
-          product.price,
-          product.taxes,
-          product.ads,
-          product.discount,
-          product.total,
-          product.category
-        )
-      );
+      let product = {
+        id: products.length,
+        name: document.querySelector("#product-name").value,
+        price: document.querySelector("#product-price").value,
+        taxes: document.querySelector("#product-taxes").value,
+        ads: document.querySelector("#product-adg").value,
+        discount: document.querySelector("#product-discount").value,
+        total: document.querySelector(".result").textContent,
+        category: document.querySelector("#product-category").value,
+      };
+      tbody.append(productTableRow(product));
       products.push(product);
     }
+    updateProducts();
   }
 }
 
@@ -141,5 +108,41 @@ document.querySelectorAll(".product-price-controllers input").forEach((ele) => {
 
 let addCategory = document.getElementById("add-category");
 addCategory.addEventListener("click", () => {
-  document.querySelector(".popup-container").style.display = "block";
-})
+  let popupContainer = document.querySelector(".popup-container");
+  popupContainer.style.display = "block";
+  document.querySelector(".popup-container .close").addEventListener("click",() => {
+    popupContainer.style.display = "none";
+  });
+  document.querySelector(".popup-container button").addEventListener("click",() => {
+    let categoryName = document.querySelector(".popup-container #popup-category").value;
+    if(categoryName){
+      categories.push(categoryName);
+      updateCategorys();
+    }else{
+      alert("type a category name");
+    }
+    
+  });
+});
+function updateCategorys (){
+  let categorySelectBox = document.querySelector("#product-category");
+  categorySelectBox.innerHTML = "";
+  let categorysSet = new Set(categories);
+  categories = Array.from(categorysSet);
+  categories.forEach(e => {
+    let option = document.createElement("option");
+    option.value = e;
+    option.textContent = e;
+    categorySelectBox.append(option);
+  });
+  window.localStorage.setItem("categories",JSON.stringify(categories));
+}
+function updateProducts(){
+  let productsList = document.querySelector("table tbody");
+  productsList.innerHTML = "";
+  products.forEach(e => {
+    productsList.append(productTableRow(e));
+  });
+  console.log(products);
+  window.localStorage.setItem("products",JSON.stringify(products));
+}
