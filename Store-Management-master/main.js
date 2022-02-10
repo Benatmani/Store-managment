@@ -5,26 +5,76 @@ let categories = JSON.parse(localStorage.getItem("categories"))
   ? JSON.parse(localStorage.getItem("categories"))
   : [];
   updateCategorys();
-  updateProducts();
+  updateProducts(products,"products");
+// add new product(s) functionality
 document.querySelector("#create-product").addEventListener("click", () => {
   testFields();
 });
+
+// the functionality calculating the total amount of the product
+document.querySelectorAll(".product-price-controllers input").forEach((ele) => {
+  ele.addEventListener("change", () => {
+    let result = document.querySelector(".result");
+    let checkFields = Array.from(
+      document.querySelectorAll(
+        ".product-price-controllers input:not(:last-of-type)"
+      )
+    );
+    let isEmpty = checkFields.some((ele) => ele.value === "");
+    if (isEmpty) {
+      result.textContent = "";
+    } else {
+      console.log(checkFields);
+
+      let total = checkFields
+        .map((ele) => Number(ele.value))
+        .reduce(function (previousValue, currentValue) {
+          return previousValue + currentValue;
+        }, 0);
+      result.textContent = total;
+    }
+
+    result.textContent =
+      result.textContent - document.querySelector("#product-discount").value;
+  });
+});
+
+// add new categorie functionality
+let addCategory = document.getElementById("add-category");
+addCategory.addEventListener("click", () => {
+  let popupContainer = document.querySelector(".popup-container");
+  popupContainer.style.display = "block";
+  document.querySelector(".popup-container .close").addEventListener("click",() => {
+    popupContainer.style.display = "none";
+  });
+  document.querySelector(".popup-container button").addEventListener("click",() => {
+    let categoryName = document.querySelector(".popup-container #popup-category").value;
+    if(categoryName){
+      categories.push(categoryName);
+      updateCategorys();
+    }else{
+      alert("type a category name");
+    }
+    
+  });
+});
+// search input functionality 
+const searchInput = document.querySelector("#search-field");
+searchInput.addEventListener("keyup",() => {
+  let filteredProducts = products.filter(e => {
+    const productName = e.name.toUpperCase();
+    return productName.startsWith(searchInput.value.toUpperCase());
+  });
+  updateProducts(filteredProducts,"filteredProducts");
+});
+
+
 function productTableRow(product) {
   let row = document.createElement("tr");
   Object.values(product).forEach(e => {
-    row.innerHTML+=`<td>${e}</td>`;
+    row.innerHTML+=`<td>${e === "" ? "-" : e}</td>`; 
   })
-  row.innerHTML+='<td><button class="update">Update</button></td> <td><button class="delete" >Delete</button></td>'
-  /*row.innerHTML = `<td>${id}</td>
-              <td>${name}</td>
-              <td>${price}</td>
-              <td>${taxes}</td>
-              <td>${ads}</td>
-              <td>${discount}</td>
-              <td>${total}</td>
-              <td>${category}</td>
-              <td><button class="update">Update</button></td>
-              <td><button class="delete" >Delete</button></td>`;*/
+  row.innerHTML+='<td><button class="update">Update</button></td> <td><button class="delete" >Delete</button></td>';
   return row;
 }
 
@@ -73,57 +123,12 @@ function testFields() {
       };
       tbody.append(productTableRow(product));
       products.push(product);
+      document.querySelector("#search-field").value = "";
     }
-    updateProducts();
+    updateProducts(products,"products");
   }
 }
 
-document.querySelectorAll(".product-price-controllers input").forEach((ele) => {
-  ele.addEventListener("change", (e) => {
-    let result = document.querySelector(".result");
-    let checkFields = Array.from(
-      document.querySelectorAll(
-        ".product-price-controllers input:not(:last-of-type)"
-      )
-    );
-    let isEmpty = checkFields.some((ele) => ele.value === "");
-    if (isEmpty) {
-      result.textContent = "";
-    } else {
-      console.log(checkFields);
-
-      let total = checkFields
-        .map((ele) => Number(ele.value))
-        .reduce(function (previousValue, currentValue) {
-          return previousValue + currentValue;
-        }, 0);
-      result.textContent = total;
-    }
-
-    result.textContent =
-      result.textContent - document.querySelector("#product-discount").value;
-  });
-});
-
-
-let addCategory = document.getElementById("add-category");
-addCategory.addEventListener("click", () => {
-  let popupContainer = document.querySelector(".popup-container");
-  popupContainer.style.display = "block";
-  document.querySelector(".popup-container .close").addEventListener("click",() => {
-    popupContainer.style.display = "none";
-  });
-  document.querySelector(".popup-container button").addEventListener("click",() => {
-    let categoryName = document.querySelector(".popup-container #popup-category").value;
-    if(categoryName){
-      categories.push(categoryName);
-      updateCategorys();
-    }else{
-      alert("type a category name");
-    }
-    
-  });
-});
 function updateCategorys (){
   let categorySelectBox = document.querySelector("#product-category");
   categorySelectBox.innerHTML = "";
@@ -137,12 +142,11 @@ function updateCategorys (){
   });
   window.localStorage.setItem("categories",JSON.stringify(categories));
 }
-function updateProducts(){
+function updateProducts(allProducts,allProductsName){
   let productsList = document.querySelector("table tbody");
   productsList.innerHTML = "";
-  products.forEach(e => {
+  allProducts.forEach(e => {
     productsList.append(productTableRow(e));
   });
-  console.log(products);
-  window.localStorage.setItem("products",JSON.stringify(products));
+  if(allProductsName === "products") window.localStorage.setItem("products",JSON.stringify(products));
 }

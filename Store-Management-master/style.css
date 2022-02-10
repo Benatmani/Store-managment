@@ -46,6 +46,9 @@ main input {
   gap: 10px;
   margin-bottom: 30px;
 }
+.container hr{
+  margin: 20px 0;
+}
 .search-options {
   display: grid;
   grid-template-columns: 2fr 1fr;
