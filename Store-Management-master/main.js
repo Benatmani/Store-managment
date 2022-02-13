@@ -4,7 +4,8 @@ let products = JSON.parse(localStorage.getItem("products"))
 let categories = JSON.parse(localStorage.getItem("categories"))
   ? JSON.parse(localStorage.getItem("categories"))
   : [];
-  updateCategorys();
+  updateCategorys(document.querySelector("#product-category"));
+  updateCategorys(document.querySelector("#search-combo-box"));
   updateProducts(products,"products");
 // add new product(s) functionality
 document.querySelector("#create-product").addEventListener("click", () => {
@@ -51,7 +52,8 @@ addCategory.addEventListener("click", () => {
     let categoryName = document.querySelector(".popup-container #popup-category").value;
     if(categoryName){
       categories.push(categoryName);
-      updateCategorys();
+     updateCategorys(document.querySelector("#product-category"));
+  updateCategorys(document.querySelector("#search-combo-box"));
     }else{
       alert("type a category name");
     }
@@ -59,14 +61,10 @@ addCategory.addEventListener("click", () => {
   });
 });
 // search input functionality 
+
 const searchInput = document.querySelector("#search-field");
-searchInput.addEventListener("keyup",() => {
-  let filteredProducts = products.filter(e => {
-    const productName = e.name.toUpperCase();
-    return productName.startsWith(searchInput.value.toUpperCase());
-  });
-  updateProducts(filteredProducts,"filteredProducts");
-});
+const selectBoxSearch = document.querySelector
+searchInput.addEventListener("keyup",filterProducts);
 
 
 function productTableRow(product) {
@@ -129,16 +127,15 @@ function testFields() {
   }
 }
 
-function updateCategorys (){
-  let categorySelectBox = document.querySelector("#product-category");
-  categorySelectBox.innerHTML = "";
+function updateCategorys (selectBox){
+  selectBox.innerHTML = "";
   let categorysSet = new Set(categories);
   categories = Array.from(categorysSet);
   categories.forEach(e => {
     let option = document.createElement("option");
     option.value = e;
     option.textContent = e;
-    categorySelectBox.append(option);
+    selectBox.append(option);
   });
   window.localStorage.setItem("categories",JSON.stringify(categories));
 }
@@ -149,4 +146,11 @@ function updateProducts(allProducts,allProductsName){
     productsList.append(productTableRow(e));
   });
   if(allProductsName === "products") window.localStorage.setItem("products",JSON.stringify(products));
+}
+function filterProducts() {
+  let filteredProducts = products.filter(e => {
+    const productName = e.name.toUpperCase();
+    return productName.startsWith(this.value.toUpperCase());
+  });
+  updateProducts(filteredProducts,"filteredProducts");
 }
