@@ -4,6 +4,7 @@ let products = JSON.parse(localStorage.getItem("products"))
 let categories = JSON.parse(localStorage.getItem("categories"))
   ? JSON.parse(localStorage.getItem("categories"))
   : [];
+let filteredProducts = products;
   updateCategorys(document.querySelector("#product-category"));
   updateCategorys(document.querySelector("#search-combo-box"));
   updateProducts(products,"products");
@@ -60,13 +61,44 @@ addCategory.addEventListener("click", () => {
     
   });
 });
-// search input functionality 
 
+// search input functionality 
 const searchInput = document.querySelector("#search-field");
 const selectBoxSearch = document.querySelector
-searchInput.addEventListener("keyup",filterProducts);
+searchInput.addEventListener("keyup",function (){
+  filterProducts("searchInput",searchInput);
+});
+// search selectbox functionality 
+const searchSelectBox = document.querySelector("#search-combo-box");
+searchSelectBox.addEventListener("change",() => {
+  filterProducts("searchSelect",searchSelectBox);
+})
+// delete all functionality
+const deleteAll = document.querySelector("#delete-product");
+deleteAll.addEventListener("click",() => {
+  products = [];
+  updateProducts(products,"products");
+})
+// update of one product functionality
+document.querySelectorAll(".update").forEach((e) => {
+  e.addEventListener("click",() => {
+    let productID = e.parentElement.parentElement.firstElementChild.textContent;
+    console.log(productID);
+    let hr = document.querySelector("hr");
+    if(hr.previousElementSibling.id === "create-product"){
+      document.querySelector("hr").previousElementSibling.remove();
+      document.querySelector("#product-count").remove();
+      let updateButton = document.createElement("button");
+      updateButton.textContent = "update product";
+      updateButton.id = "update-product";
+      hr.before(updateButton);
+      // confirming update of one product functionality
+      updateButton.addEventListener("click",() => {
 
-
+      })
+    }
+  })
+})
 function productTableRow(product) {
   let row = document.createElement("tr");
   Object.values(product).forEach(e => {
@@ -147,10 +179,11 @@ function updateProducts(allProducts,allProductsName){
   });
   if(allProductsName === "products") window.localStorage.setItem("products",JSON.stringify(products));
 }
-function filterProducts() {
-  let filteredProducts = products.filter(e => {
-    const productName = e.name.toUpperCase();
-    return productName.startsWith(this.value.toUpperCase());
-  });
+function filterProducts(searchOption,searchInput) {
+    filteredProducts = filteredProducts.filter(e => {
+        const searchValue = searchOption === "searchInput" ? e.name.toUpperCase() : e.category.toUpperCase();
+        return searchValue.startsWith(searchInput.value.toUpperCase());
+      });
   updateProducts(filteredProducts,"filteredProducts");
+  filteredProducts = products;
 }
