@@ -46,6 +46,9 @@ main input {
   gap: 10px;
   margin-bottom: 30px;
 }
+.product-specifications > *{
+  height: 40px;
+}
 .container hr{
   margin: 20px 0;
 }
@@ -56,7 +59,8 @@ main input {
   margin: 20px 0;
 }
 #delete-product,
-#create-product {
+#create-product,
+#update-product {
   width: 100%;
   height: 40px;
 }
