@@ -64,14 +64,13 @@ addCategory.addEventListener("click", () => {
 
 // search input functionality 
 const searchInput = document.querySelector("#search-field");
-const selectBoxSearch = document.querySelector
 searchInput.addEventListener("keyup",function (){
-  filterProducts("searchInput",searchInput);
+  filterProducts();
 });
 // search selectbox functionality 
 const searchSelectBox = document.querySelector("#search-combo-box");
 searchSelectBox.addEventListener("change",() => {
-  filterProducts("searchSelect",searchSelectBox);
+  filterProducts();
 })
 // delete all functionality
 const deleteAll = document.querySelector("#delete-product");
@@ -160,7 +159,9 @@ function testFields() {
 }
 
 function updateCategorys (selectBox){
-  selectBox.innerHTML = "";
+  /* reseting the select box */ 
+  const options = [...selectBox.children];
+  options.forEach(e => {if(e.value !== "all") e.remove()});
   let categorysSet = new Set(categories);
   categories = Array.from(categorysSet);
   categories.forEach(e => {
@@ -179,10 +180,10 @@ function updateProducts(allProducts,allProductsName){
   });
   if(allProductsName === "products") window.localStorage.setItem("products",JSON.stringify(products));
 }
-function filterProducts(searchOption,searchInput) {
+function filterProducts() {
     filteredProducts = filteredProducts.filter(e => {
-        const searchValue = searchOption === "searchInput" ? e.name.toUpperCase() : e.category.toUpperCase();
-        return searchValue.startsWith(searchInput.value.toUpperCase());
+        if(searchSelectBox.value === "all") return e.name.startsWith(searchInput.value);
+        return e.name.startsWith(searchInput.value) && e.category === searchSelectBox.value;
       });
   updateProducts(filteredProducts,"filteredProducts");
   filteredProducts = products;
